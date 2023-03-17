@@ -16,6 +16,8 @@ class Item(MethodView):
     @jwt_required()
     @blp.response(200, ItemSchema)
     def get(self, item_id):
+        """Fetches an item with item id
+        """
         item = ItemModel.query.get_or_404(item_id)
         return item
     
