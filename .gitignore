@@ -160,3 +160,5 @@ cython_debug/
 #.idea/
 
 /csvs/*.csv
+.env
+data.db
