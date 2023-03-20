@@ -5,8 +5,10 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 
 from db import db
+from rq import Queue
 import models
 import os
+import redis
 
 from resources.item import blp as ItemBlueprint
 from resources.store import blp as StoreBlueprint
@@ -18,6 +20,11 @@ def create_app(db_url=None):
     app = Flask(__name__)
     load_dotenv()
 
+    connection = redis.from_url(
+        os.getenv("REDIS_URL")
+    )
+    
+    app.queue = Queue("emails", connection=connection)
     #--Configurations--
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
@@ -50,6 +57,7 @@ def create_app(db_url=None):
             ),
             401
         )
+        
         
     @jwt.needs_fresh_token_loader
     def token_not_fresh_callback(jwt_header, jwt_payload):
